@@ -16,7 +16,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
 
     @Transactional
-    public Article post(Article article) {
+    public Article create(Article article) {
         articleRepository.create(article);
         return article;
     }
