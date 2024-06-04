@@ -1,13 +1,15 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/order
+    url: jdbc:mysql://localhost:3306/javaproject
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: none
+      open-in-view: true
+      ddl-auto: update
+      dialect: org.hibernate.dialect.MySQL8Dialect
     properties:
       format_sql: true
 
