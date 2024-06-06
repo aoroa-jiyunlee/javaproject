@@ -48,9 +48,18 @@ public class MemberRepository {
     public Member update(Long id, Member member) {
         Member found = readOne(id);
 
-        found.setNickname(member.getNickname());
-        found.setName(member.getName());
-        found.setMobile(member.getMobile());
+        if (member.getNickname() != null) {
+            found.setNickname(member.getNickname());
+        }
+        if (member.getMobile() != null){
+            found.setName(member.getName());
+        }
+        if (member.getPassword() != null) {
+            found.setPassword(member.getPassword());
+        }
+        if (member.getName() != null) {
+            found.setName(member.getName());
+        }
 
         return member;
     }

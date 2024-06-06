@@ -2,6 +2,7 @@ package javaproject.mini.service;
 
 import javaproject.mini.model.article.Article;
 import javaproject.mini.repository.ArticleRepository;
+import javaproject.mini.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import java.util.List;
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public Article create(Article article) {

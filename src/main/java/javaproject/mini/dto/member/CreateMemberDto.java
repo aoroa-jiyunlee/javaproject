@@ -1,6 +1,7 @@
 package javaproject.mini.dto.member;
 
-import javaproject.mini.model.member.Member;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,23 +11,21 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateMemberDto {
+    @NotBlank
+    @Email
     private String email;
+
+    @NotBlank
     private String password;
+
+    @NotBlank
     private String nickname;
+
+    @NotBlank
     private String name;
+
     private Long mobile;
     private int birthYear;
 
-    public Member translateToModel() {
-        Member member = new Member();
-        member.setEmail(email);
-        member.setPassword(password);
-        member.setNickname(nickname);
-        member.setName(name);
-        member.setMobile(mobile);
-        member.setBirthYear(birthYear);
-        member.setActivate(true);
-
-        return member;
-    }
+    private boolean activate;
 }
