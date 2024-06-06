@@ -45,7 +45,10 @@ public class MemberController {
     public ResponseEntity<ApiResponse> findMembers() {
         List<Member> members = memberService.findMembers();
         List<ReadMemberDto> memberDtos = members.stream()
-                .map(memberMapper::toDto).collect(Collectors.toList());
+                .map(m -> new ReadMemberDto(
+                        m.getId(), m.getEmail(), m.getNickname(), m.getName(), m.getMobile(), m.getBirthYear(),
+                        m.getArticles(), m.getComments()
+                )).collect(Collectors.toList());
 
         ApiResponse apiResponse = new ApiResponse(memberDtos, "Success");
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -54,7 +57,10 @@ public class MemberController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> findOneMember(@PathVariable("id") Long id) {
         Member m = memberService.findOneMember(id);
-        ReadMemberDto memberDto = memberMapper.toDto(m);
+        ReadMemberDto memberDto = new ReadMemberDto(
+                m.getId(), m.getEmail(), m.getNickname(), m.getName(), m.getMobile(), m.getBirthYear(),
+                m.getArticles(), m.getComments()
+        );
 
         ApiResponse apiResponse = new ApiResponse(memberDto, "Success");
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);

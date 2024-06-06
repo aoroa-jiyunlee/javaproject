@@ -45,7 +45,10 @@ public class ArticleController {
     public ResponseEntity<ApiResponse> findArticles() {
         List<Article> articles = articleService.findArticles();
         List<ReadArticleDto> articleDtos = articles.stream()
-                .map(articleMapper::toDto).collect(Collectors.toList());
+                .map(a -> new ReadArticleDto(
+                        a.getId(), a.getMember(), a.getImages(), a.getHashtags(),
+                        a.getContent(), a.getComments(), a.getSavedAt()
+                )).collect(Collectors.toList());
 
         ApiResponse apiResponse = new ApiResponse(articleDtos, "Updated");
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -54,7 +57,10 @@ public class ArticleController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> findOneArticle(@PathVariable("id") Long id) {
         Article a = articleService.findOneArticle(id);
-        ReadArticleDto articleDto = articleMapper.toDto(a);
+        ReadArticleDto articleDto = new ReadArticleDto(
+                a.getId(), a.getMember(), a.getImages(), a.getHashtags(),
+                a.getContent(), a.getComments(), a.getSavedAt()
+        );
 
         ApiResponse apiResponse = new ApiResponse(articleDto, "Updated");
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);

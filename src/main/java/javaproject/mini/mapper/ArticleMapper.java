@@ -14,6 +14,4 @@ public interface ArticleMapper {
     Article createArticleDtoToArticle(CreateArticleDto createArticleDto);
 
     Article updateArticleDtoToArticle(UpdateArticleDto updateArticleDto);
-
-    ReadArticleDto toDto(Article article);
 }

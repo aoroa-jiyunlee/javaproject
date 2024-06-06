@@ -13,6 +13,4 @@ public interface MemberMapper {
     Member createMemberDtoToMember(CreateMemberDto createMemberDto);
 
     Member updateMemberDtoToMember(UpdateMemberDto updateMemberDto);
-
-    ReadMemberDto toDto(Member member);
 }
