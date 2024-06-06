@@ -7,13 +7,14 @@ import javaproject.mini.model.article.HashTag;
 import javaproject.mini.model.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
+@Getter @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class UpdateArticleDto {
     private Long id;

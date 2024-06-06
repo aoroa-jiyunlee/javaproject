@@ -3,9 +3,11 @@ package javaproject.mini.dto.member;
 import javaproject.mini.model.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class CreateMemberDto {
     private String email;
@@ -23,6 +25,7 @@ public class CreateMemberDto {
         member.setName(name);
         member.setMobile(mobile);
         member.setBirthYear(birthYear);
+        member.setActivate(true);
 
         return member;
     }

@@ -5,6 +5,7 @@ import javaproject.mini.model.article.*;
 import javaproject.mini.model.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.cglib.core.Local;
 
@@ -12,8 +13,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@Getter @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class CreateArticleDto {
     private Member member;

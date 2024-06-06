@@ -1,5 +1,6 @@
 package javaproject.mini.service;
 
+import jakarta.validation.ValidationException;
 import javaproject.mini.model.member.Member;
 import javaproject.mini.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,13 +11,12 @@ import java.util.List;
 
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    @Transactional
     public Member join(Member member) {
         validateDuplicatedMember(member);
         memberRepository.create(member);
@@ -24,9 +24,9 @@ public class MemberService {
     }
 
     private void validateDuplicatedMember(Member member) {
-        List<Member> findMembers = memberRepository.readByNickName(member.getName());
+        List<Member> findMembers = memberRepository.readByNickName(member.getNickname());
         if (!findMembers.isEmpty()) {
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
+            throw new ValidationException("이미 존재하는 회원입니다.");
         }
     }
 
@@ -38,12 +38,10 @@ public class MemberService {
         return memberRepository.readOne(memberId);
     }
 
-    @Transactional
-    public Member update(Member member) {
-        return memberRepository.update(member);
+    public Member update(Long id, Member member) {
+        return memberRepository.update(id, member);
     }
 
-    @Transactional
     public Long delete(Long memberId) {
         return memberRepository.delete(memberId);
     }
