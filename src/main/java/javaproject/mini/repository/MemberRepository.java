@@ -1,17 +1,18 @@
 package javaproject.mini.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.*;
+import jakarta.validation.ValidationException;
 import javaproject.mini.model.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
 public class MemberRepository {
-
+    @PersistenceContext
     private final EntityManager em;
 
     public Long create(Member member) {
@@ -20,44 +21,54 @@ public class MemberRepository {
     }
 
     public Member readOne(Long id) {
-        return em.find(Member.class, id);
-    }
+        Member member = em.find(Member.class, id);
 
-    public List<Member> readAll() {
-        return em.createQuery("select m from Member m", Member.class)
-                .getResultList();
-    }
-
-    public List<Member> readByNickName(String nickname) {
-        return em.createQuery("select m from Member m where m.nickname = :nickname", Member.class)
-                .setParameter("nickname", nickname)
-                .getResultList();
-    }
-
-    public Member update(Member member) {
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
-
-        Member found = readOne(member.getId());
-
-        found.setNickname(member.getNickname());
-        found.setName(member.getName());
-        found.setMobile(member.getMobile());
-
-        em.merge(found);
-
-        tx.commit();
+        if (member == null) {
+            throw new ValidationException("존재하지 않는 회원입니다.");
+        }
+        if (!member.getActivate()) {
+            throw new ValidationException("탈퇴한 회원입니다.");
+        }
 
         return member;
     }
 
-    public Long delete(Long id) {
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
+    public List<Member> readAll() {
+        return em.createQuery("select m from Member m where m.activate = true", Member.class)
+                .getResultList();
+    }
 
+    public List<Member> readByNickName(String nickname) {
+        return em.createQuery("select m from Member m where m.nickname = :nickname and m.activate = true", Member.class)
+                .setParameter("nickname", nickname)
+                .getResultList();
+    }
+
+    @Transactional
+    public Member update(Long id, Member member) {
         Member found = readOne(id);
-        em.remove(found);
-        tx.commit();
+
+        if (member.getNickname() != null) {
+            found.setNickname(member.getNickname());
+        }
+        if (member.getMobile() != null){
+            found.setName(member.getName());
+        }
+        if (member.getPassword() != null) {
+            found.setPassword(member.getPassword());
+        }
+        if (member.getName() != null) {
+            found.setName(member.getName());
+        }
+
+        return member;
+    }
+
+    @Transactional
+    public Long delete(Long id) {
+        Member found = readOne(id);
+
+        found.setActivate(false);
 
         return id;
     }

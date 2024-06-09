@@ -4,36 +4,45 @@ import jakarta.validation.Valid;
 import javaproject.mini.dto.article.CreateArticleDto;
 import javaproject.mini.dto.article.ReadArticleDto;
 import javaproject.mini.dto.article.UpdateArticleDto;
+import javaproject.mini.mapper.ArticleMapper;
 import javaproject.mini.model.article.Article;
+import javaproject.mini.response.ApiResponse;
 import javaproject.mini.service.ArticleService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin(originPatterns = "http://localhost:8080")
 @RestController
+@RequestMapping("/api/v1/article")
 @RequiredArgsConstructor
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final ArticleMapper articleMapper;
 
-    @PostMapping("/api/v1/article")
-    public CreateArticleResponse createArticle(@RequestBody @Valid CreateArticleDto request) {
-        Article article = articleService.create(request.translateToModel());
-        return new CreateArticleResponse(article.getId());
+    @PostMapping
+    public ResponseEntity<ApiResponse> createArticle(@RequestBody @Valid CreateArticleDto articleDto) {
+        Article article = articleService.create(articleMapper.createArticleDtoToArticle(articleDto));
+
+        ApiResponse apiResponse = new ApiResponse(article.getId(), "Created");
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @PutMapping("/api/v1/article")
-    public UpdatearticleResponse updatearticle(@RequestBody @Valid UpdateArticleDto request) {
-        Article article = articleService.update(request.translateToModel());
-        return new UpdatearticleResponse(article.getId());
+    @PutMapping
+    public ResponseEntity<ApiResponse> updateArticle(@RequestBody @Valid UpdateArticleDto articleDto) {
+        Article article = articleService.update(articleMapper.updateArticleDtoToArticle(articleDto));
+
+        ApiResponse apiResponse = new ApiResponse(article.getId(), "Updated");
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/api/v1/article")
-    public FindarticleResponse findarticles() {
+    @GetMapping
+    public ResponseEntity<ApiResponse> findArticles() {
         List<Article> articles = articleService.findArticles();
         List<ReadArticleDto> articleDtos = articles.stream()
                 .map(a -> new ReadArticleDto(
@@ -41,51 +50,19 @@ public class ArticleController {
                         a.getContent(), a.getComments(), a.getSavedAt()
                 )).collect(Collectors.toList());
 
-        return new FindarticleResponse(articleDtos);
+        ApiResponse apiResponse = new ApiResponse(articleDtos, "Updated");
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/api/v1/article/{id}")
-    public GetArticleResponse findOnearticle(@PathVariable("id") Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse> findOneArticle(@PathVariable("id") Long id) {
         Article a = articleService.findOneArticle(id);
         ReadArticleDto articleDto = new ReadArticleDto(
                 a.getId(), a.getMember(), a.getImages(), a.getHashtags(),
                 a.getContent(), a.getComments(), a.getSavedAt()
         );
-        return new GetArticleResponse(articleDto);
-    }
 
-    @Data
-    static class CreateArticleResponse {
-        private Long id;
-
-        public CreateArticleResponse(Long id) {
-            this.id = id;
-        }
-    }
-
-    @Data
-    static class UpdatearticleResponse {
-        private Long id;
-        public UpdatearticleResponse(Long id) {
-            this.id = id;
-        }
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class FindarticleResponse {
-        private List<ReadArticleDto> articles;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class GetArticleResponse {
-        private ReadArticleDto article;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class Result<T> {
-        private T data;
+        ApiResponse apiResponse = new ApiResponse(articleDto, "Updated");
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 }

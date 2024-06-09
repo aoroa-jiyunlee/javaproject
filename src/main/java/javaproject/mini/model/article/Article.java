@@ -21,6 +21,8 @@ public class Article {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    private String content;
+
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<ArticleImage> images = new ArrayList<>();
 
@@ -33,6 +35,5 @@ public class Article {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<ArticleLike> likes = new ArrayList<>();
 
-    private String content;
     private LocalDateTime savedAt;
 }
